@@ -58,9 +58,14 @@
 
   /* Velo sobre las fotos de fondo. Es degradado, no plano: cubre donde va el
      texto y se abre hacia arriba y a la derecha, que es donde la foto puede
-     verse sin comprometer el contraste. */
-  --fondo-velo: #ffffff;
-  --fondo-opacidad: 0.55;
+     verse sin comprometer el contraste.
+
+     Los dos degradados son tokens y no valores en el componente porque cada
+     tema necesita una fuerza distinta: sobre blanco, una foto oscura se apaga
+     enseguida; sobre negro hay que dejarla respirar mucho más. */
+  --fondo-opacidad: 0.6;
+  --fondo-velo-v: linear-gradient(to top, #ffffff 0%, rgb(255 255 255 / 0.82) 45%, rgb(255 255 255 / 0.5) 100%);
+  --fondo-velo-h: linear-gradient(to right, rgb(255 255 255 / 0.92) 0%, rgb(255 255 255 / 0.5) 45%, transparent 85%);
 }
 
 .dark {
@@ -103,9 +108,10 @@
   --chart-4: #a78bfa;
   --chart-5: #fbbf24;
 
-  /* En oscuro la foto respira más: el texto claro sobre negro tolera más luz. */
-  --fondo-velo: #0b0e12;
-  --fondo-opacidad: 0.75;
+  /* En oscuro el texto es claro sobre negro y tolera mucha más luz detrás. */
+  --fondo-opacidad: 0.85;
+  --fondo-velo-v: linear-gradient(to top, rgb(11 14 18 / 0.96) 0%, rgb(11 14 18 / 0.62) 45%, rgb(11 14 18 / 0.25) 100%);
+  --fondo-velo-h: linear-gradient(to right, rgb(11 14 18 / 0.9) 0%, rgb(11 14 18 / 0.4) 50%, transparent 88%);
 }
 
 @theme inline {

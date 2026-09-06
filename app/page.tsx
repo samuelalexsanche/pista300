@@ -29,7 +29,7 @@ export default function Home() {
     <>
       {/* ---------------------------------------------------------------- HERO */}
       <section className="relative isolate overflow-hidden border-b">
-        <Fondo src="/img/torneos/regio-scratch.jpg" prioridad />
+        <Fondo src="/img/articulos/leer-la-pista.jpg" prioridad />
         <div className="pin-grid pointer-events-none absolute inset-0 opacity-60" aria-hidden />
         <PinTriangle className="text-primary pointer-events-none absolute -top-16 right-[-8%] hidden w-[420px] opacity-[0.13] lg:block" />
         <div className="container-page relative grid gap-10 py-16 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:py-24">

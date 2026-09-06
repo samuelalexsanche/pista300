@@ -40,23 +40,11 @@ export function Fondo({
           style={{ opacity: "var(--fondo-opacidad)" }}
         />
       </div>
-      {/* Velo degradado. Denso abajo a la izquierda, donde vive el texto; se
-          abre hacia arriba y a la derecha para que la foto se vea. Un velo
-          plano tapa la foto entera y deja el fondo en un gris sin sentido. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to top, var(--fondo-velo) 0%, color-mix(in srgb, var(--fondo-velo) 82%, transparent) 45%, color-mix(in srgb, var(--fondo-velo) 55%, transparent) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to right, var(--fondo-velo) 0%, color-mix(in srgb, var(--fondo-velo) 60%, transparent) 45%, transparent 85%)",
-        }}
-      />
+      {/* Velo degradado, denso donde vive el texto y abierto hacia arriba y a
+          la derecha. Los valores son tokens porque cada tema necesita una
+          fuerza distinta; ver app/globals.css. */}
+      <div className="absolute inset-0" style={{ background: "var(--fondo-velo-v)" }} />
+      <div className="absolute inset-0" style={{ background: "var(--fondo-velo-h)" }} />
     </div>
   );
 }
