@@ -1,0 +1,15 @@
+Esta carpeta está vacía a propósito.
+
+El demo no incluye ninguna imagen: cada hueco se dibuja con el componente
+<Placeholder /> (components/marketing/placeholder.tsx), que muestra en pantalla
+la ruta exacta que el código espera y sus dimensiones.
+
+Son 61 huecos, repartidos en:
+  public/img/torneos/     8 archivos   1600x900   (16:9)
+  public/img/articulos/  14 archivos   2100x900   (21:9)
+  public/img/bolas/      14 archivos   1000x1000  (1:1)
+  public/img/centros/    10 archivos   1600x1200  (4:3)
+  public/img/equipos/     9 archivos   1200x900   (4:3)
+  public/img/tecnicas/    6 archivos   1200x900   (4:3)
+
+Los prompts de IA para generarlas, uno por archivo, están en docs/IMAGENES.md.

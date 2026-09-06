@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   PISTA300 — Sistema de diseño
+   Deportivo, claro y denso en datos. Referencia: Strava / ATP Tour.
+   Los tokens se definen una sola vez aquí; nada usa colores literales.
+   ========================================================================== */
+
+:root {
+  --radius: 0.75rem;
+
+  /* Superficies */
+  --background: #ffffff;
+  --foreground: #0c1116;
+  --surface: #f6f7f9;
+  --surface-2: #eef0f3;
+
+  --card: #ffffff;
+  --card-foreground: #0c1116;
+  --popover: #ffffff;
+  --popover-foreground: #0c1116;
+
+  /* Marca */
+  --primary: #ff5a1f;          /* naranja pista */
+  --primary-foreground: #ffffff;
+  --secondary: #f6f7f9;
+  --secondary-foreground: #0c1116;
+
+  /* Dato */
+  --data: #1b6ef3;             /* azul de gráficas y métricas */
+  --data-foreground: #ffffff;
+
+  --muted: #f6f7f9;
+  --muted-foreground: #5b6470;
+  --accent: #f1f3f5;
+  --accent-foreground: #0c1116;
+
+  /* Semántica de rendimiento */
+  --positive: #16a34a;
+  --negative: #dc2626;
+  --warning: #d97706;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --border: #e4e7eb;
+  --input: #e4e7eb;
+  --ring: #ff5a1f;
+
+  /* Serie de gráficas */
+  --chart-1: #ff5a1f;
+  --chart-2: #1b6ef3;
+  --chart-3: #0f766e;
+  --chart-4: #7c3aed;
+  --chart-5: #a16207;
+}
+
+.dark {
+  --background: #0b0e12;
+  --foreground: #e8ebef;
+  --surface: #12171d;
+  --surface-2: #171d24;
+
+  --card: #12171d;
+  --card-foreground: #e8ebef;
+  --popover: #12171d;
+  --popover-foreground: #e8ebef;
+
+  --primary: #ff6b33;
+  --primary-foreground: #16100c;
+  --secondary: #1a212a;
+  --secondary-foreground: #e8ebef;
+
+  --data: #4d90fb;
+  --data-foreground: #071018;
+
+  --muted: #161c23;
+  --muted-foreground: #97a1ad;
+  --accent: #1a212a;
+  --accent-foreground: #e8ebef;
+
+  --positive: #4ade80;
+  --negative: #f87171;
+  --warning: #fbbf24;
+  --destructive: #f87171;
+  --destructive-foreground: #1a0b0b;
+
+  --border: #232b33;
+  --input: #2a333d;
+  --ring: #ff6b33;
+
+  --chart-1: #ff6b33;
+  --chart-2: #4d90fb;
+  --chart-3: #2dd4bf;
+  --chart-4: #a78bfa;
+  --chart-5: #fbbf24;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-data: var(--data);
+  --color-data-foreground: var(--data-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-warning: var(--warning);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Las cifras nunca bailan: ancho tabular en todo dato numérico. */
+  .tnum,
+  table td,
+  table th {
+    font-variant-numeric: tabular-nums;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 768px) {
+    .container-page { padding-inline: 2rem; }
+  }
+
+  /* Retícula de pines: fondo decorativo del hero y los separadores */
+  .pin-grid {
+    background-image: radial-gradient(circle at center, var(--border) 1.5px, transparent 1.6px);
+    background-size: 22px 22px;
+  }
+
+  .animate-rise {
+    animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  .animate-accordion-down { animation: accordion-down 0.2s ease-out; }
+  .animate-accordion-up { animation: accordion-up 0.2s ease-out; }
+}
