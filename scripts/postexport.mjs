@@ -56,4 +56,26 @@ for await (const ruta of archivos(OUT)) {
 // 3. Desactivar Jekyll
 await writeFile(join(OUT, ".nojekyll"), "");
 
+// 4. Comprobar que ninguna imagen quedó sin el basePath.
+//
+// Next NO antepone el basePath a los archivos de /public cuando el optimizador
+// de imágenes está apagado, que es obligatorio en export estático. El build
+// pasa, el sitio compila, y en producción TODAS las imágenes dan 404 sin un
+// solo error. Ya ocurrió una vez; esto lo convierte en fallo de build.
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+if (BASE) {
+  const huerfanas = new Set();
+  for await (const ruta of archivos(OUT)) {
+    if (extname(ruta) !== ".html") continue;
+    const html = await readFile(ruta, "utf8");
+    for (const m of html.matchAll(/(?:src|href)="(\/img\/[^"]+)"/g)) huerfanas.add(m[1]);
+  }
+  if (huerfanas.size) {
+    console.error(`\npostexport: ${huerfanas.size} recursos sin el basePath "${BASE}" — darían 404 en producción:`);
+    for (const r of [...huerfanas].slice(0, 10)) console.error(`  ${r}`);
+    console.error("Pásalos por rutaPublica() de lib/seo.ts.");
+    process.exit(1);
+  }
+}
+
 console.log(`postexport: ${renombradas} imágenes OG renombradas, ${reescritos} archivos reescritos, .nojekyll creado`);

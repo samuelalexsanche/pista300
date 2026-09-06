@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { rutaPublica } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,7 +31,7 @@ export function Fondo({
     <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
       <div className="parallax-capa absolute inset-0">
         <Image
-          src={src}
+          src={rutaPublica(src)}
           alt=""
           fill
           sizes="100vw"
