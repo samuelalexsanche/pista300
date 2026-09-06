@@ -10,7 +10,7 @@ import { formatDateRange, formatMoney, daysUntil } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { Stat } from "@/components/marketing/stat";
 import { PlayerCard } from "@/components/community/player-card";
 import { TournamentRegister } from "@/components/community/tournament-register";
@@ -124,7 +124,7 @@ export default async function TorneoPage({ params }: { params: Promise<{ slug: s
             </div>
 
             <Card className="lg:sticky lg:top-20">
-              <Placeholder src={t.imagen} ratio="16/9" className="m-5 mb-0" />
+              <Foto src={t.imagen} alt={`Sede del torneo ${t.nombre}`} ratio="16/9" className="m-5 mb-0" prioridad sizes="(max-width: 1024px) 100vw, 420px" />
               <CardContent className="pt-5">
                 <div className="flex items-end justify-between border-b pb-4">
                   <Stat valor={formatMoney(t.cuota).replace(" MXN", "")} etiqueta="Cuota" />

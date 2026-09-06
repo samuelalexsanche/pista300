@@ -5,7 +5,7 @@ import { formatoLabel } from "@/data/tournaments";
 import { centerName } from "@/data/centers";
 import { formatDateRange, formatMoney, daysUntil } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { cn } from "@/lib/utils";
 
 export function TournamentCard({ t, className }: { t: Tournament; className?: string }) {
@@ -21,7 +21,7 @@ export function TournamentCard({ t, className }: { t: Tournament; className?: st
       )}
     >
       <div className="relative">
-        <Placeholder src={t.imagen} ratio="16/9" className="rounded-none border-0 border-b border-dashed" />
+        <Foto src={t.imagen} alt={`Torneo ${t.nombre} en ${t.ciudad}`} ratio="16/9" className="rounded-none" />
         <div className="absolute top-3 left-3 flex gap-1.5">
           <Badge variant={t.formato === "scratch" ? "default" : "secondary"}>{formatoLabel[t.formato]}</Badge>
           {t.destacado && <Badge variant="data">Destacado</Badge>}

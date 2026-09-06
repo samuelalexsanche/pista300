@@ -28,6 +28,11 @@ const estaticas: { ruta: string; prioridad: number; frecuencia: Entrada["changeF
   { ruta: "/", prioridad: 1, frecuencia: "daily" },
   { ruta: "/conecta/torneos", prioridad: 0.9, frecuencia: "daily" },
   { ruta: "/conecta/rankings", prioridad: 0.9, frecuencia: "daily" },
+  // Contenido de autoridad: informe propio y centro de preguntas. Alta
+  // prioridad porque son las páginas pensadas para ser citadas.
+  { ruta: "/datos", prioridad: 0.9, frecuencia: "weekly" },
+  { ruta: "/preguntas", prioridad: 0.9, frecuencia: "monthly" },
+  { ruta: "/acerca", prioridad: 0.5, frecuencia: "yearly" },
   { ruta: "/aprende", prioridad: 0.8, frecuencia: "weekly" },
   { ruta: "/aprende/boliche-basico", prioridad: 0.8, frecuencia: "monthly" },
   { ruta: "/centros", prioridad: 0.8, frecuencia: "monthly" },

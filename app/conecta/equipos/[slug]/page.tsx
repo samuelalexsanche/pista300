@@ -9,7 +9,7 @@ import { leagueBySlug } from "@/data/leagues";
 import { PlayerCard } from "@/components/community/player-card";
 import { Badge } from "@/components/ui/badge";
 import { Stat, StatStrip } from "@/components/marketing/stat";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { JsonLd } from "@/components/seo/json-ld";
 import { metadatos } from "@/lib/seo";
 import { grafo, teamSchema, breadcrumbSchema } from "@/lib/schema";
@@ -94,7 +94,7 @@ export default async function EquipoPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
         <div>
-          <Placeholder src={t.imagen} ratio="4/3" etiqueta="Foto del equipo" />
+          <Foto src={t.imagen} alt={`Integrantes del equipo ${t.nombre}`} ratio="4/3" />
           {liga && (
             <div className="mt-4 rounded-xl border p-5 text-sm">
               <p className="font-medium">{liga.nombre}</p>

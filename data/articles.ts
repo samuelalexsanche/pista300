@@ -1,4 +1,5 @@
 import type { Article, CategoriaArticulo } from "./types";
+import { extrasDeArticulo } from "./article-extras";
 
 export const categoriaLabel: Record<CategoriaArticulo, string> = {
   "boliche-basico": "Boliche básico",
@@ -10,7 +11,7 @@ export const categoriaLabel: Record<CategoriaArticulo, string> = {
   comunidad: "Comunidad",
 };
 
-export const articles: Article[] = [
+const articulosBase: Article[] = [
   {
     slug: "como-elegir-tu-primera-bola",
     titulo: "Cómo elegir tu primera bola (y por qué la de casa te está frenando)",
@@ -332,6 +333,15 @@ export const articles: Article[] = [
     ],
   },
 ];
+
+/**
+ * Los artículos ya enriquecidos con su respuesta directa y sus fuentes.
+ *
+ * La fusión se hace aquí y no en cada objeto para que `data/article-extras.ts`
+ * se pueda auditar de un vistazo: son las dos piezas que más pesan para que un
+ * motor generativo cite el artículo, y conviene poder revisarlas juntas.
+ */
+export const articles: Article[] = articulosBase.map((a) => ({ ...a, ...(extrasDeArticulo(a.slug) ?? {}) }));
 
 export const articleBySlug = (slug: string) => articles.find((a) => a.slug === slug);
 export const articlesBySeccion = (seccion: Article["seccion"]) => articles.filter((a) => a.seccion === seccion);

@@ -1,5 +1,6 @@
 import { site, siteUrl, organizacion } from "@/data/site";
 import { urlAbsoluta, recortar } from "@/lib/seo";
+import { authorConDatos } from "@/data/authors";
 import type { Article, Ball, Center, Player, Team, Tournament, League } from "@/data/types";
 
 /**
@@ -118,7 +119,19 @@ export function articleSchema(a: Article): Nodo {
     description: recortar(a.resumen),
     datePublished: a.fecha,
     dateModified: a.fecha,
-    author: { "@type": "Person", name: a.autor },
+    // `abstract` lleva la respuesta directa: es la unidad autocontenida que un
+    // motor puede levantar sin tener que resumir el artículo entero.
+    abstract: a.respuestaCorta,
+    author: autorSchema(a.autor),
+    // Las fuentes citadas van al grafo. Es una de las señales que la
+    // investigación de GEO mide como más determinantes para ser citado.
+    citation: a.fuentes?.map((f) => ({
+      "@type": "CreativeWork",
+      name: f.titulo,
+      publisher: { "@type": "Organization", name: f.organizacion },
+      url: f.url,
+      ...(f.anio ? { datePublished: String(f.anio) } : {}),
+    })),
     publisher: { "@id": ID_ORG },
     inLanguage: organizacion.idioma,
     articleSection: a.categoria,
@@ -135,6 +148,34 @@ export function articleSchema(a: Article): Nodo {
           },
         }
       : {}),
+  });
+}
+
+/**
+ * Autor con su credencial.
+ *
+ * Un `author` que es solo un nombre no aporta nada: no distingue a un
+ * practicante de doce años de experiencia de un redactor anónimo. Aquí se
+ * declara el promedio verificable, la especialidad y las certificaciones, y se
+ * enlaza al perfil donde esos datos se pueden comprobar.
+ */
+function autorSchema(nombre: string): Nodo {
+  const a = authorConDatos(nombre);
+  if (!a) return { "@type": "Person", name: nombre };
+
+  const url = a.jugador ? urlAbsoluta(`/conecta/jugadores/${a.jugador.slug}`) : undefined;
+  return limpiar({
+    "@type": "Person",
+    "@id": url ? `${url}#persona` : undefined,
+    name: a.nombre,
+    url,
+    description: a.credencial,
+    knowsAbout: [...a.especialidad],
+    hasCredential: a.certificaciones?.map((c) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: c,
+    })),
+    memberOf: a.equipo ? { "@type": "SportsTeam", name: a.equipo.nombre } : undefined,
   });
 }
 
@@ -312,6 +353,68 @@ export function ballSchema(b: Ball): Nodo {
       { "@type": "PropertyValue", name: "Condición de aceite", value: b.aceite },
     ],
   });
+}
+
+/**
+ * Conjunto de datos propio.
+ *
+ * Es el marcado que corresponde a publicar estadística original en vez de
+ * repetir la de otros. Declara periodo, tamaño de muestra, licencia y método,
+ * que es lo que permite que alguien —persona o modelo— cite la cifra sabiendo
+ * de dónde salió.
+ */
+export function datasetSchema({
+  nombre,
+  descripcion,
+  ruta,
+  desde,
+  hasta,
+  registros,
+  variables,
+}: {
+  nombre: string;
+  descripcion: string;
+  ruta: string;
+  desde: string;
+  hasta: string;
+  registros: number;
+  variables: string[];
+}): Nodo {
+  return {
+    "@type": "Dataset",
+    "@id": `${urlAbsoluta(ruta)}#dataset`,
+    name: nombre,
+    description: recortar(descripcion, 300),
+    url: urlAbsoluta(ruta),
+    creator: { "@id": ID_ORG },
+    publisher: { "@id": ID_ORG },
+    inLanguage: organizacion.idioma,
+    temporalCoverage: `${desde}/${hasta}`,
+    spatialCoverage: { "@type": "Place", name: "México" },
+    // Los datos se pueden citar y redistribuir dando crédito. Sin una licencia
+    // explícita, quien quiera usar la cifra no sabe si puede.
+    license: "https://creativecommons.org/licenses/by/4.0/",
+    isAccessibleForFree: true,
+    creativeWorkStatus: "Published",
+    variableMeasured: variables.map((v) => ({ "@type": "PropertyValue", name: v })),
+    distribution: {
+      "@type": "DataDownload",
+      encodingFormat: "text/html",
+      contentUrl: urlAbsoluta(ruta),
+    },
+    size: `${registros} juegos registrados`,
+  };
+}
+
+/** Afirmación citable: una cifra con su definición y su periodo. */
+export function claimSchema(afirmacion: string, ruta: string, indice: number): Nodo {
+  return {
+    "@type": "Claim",
+    "@id": `${urlAbsoluta(ruta)}#hallazgo-${indice}`,
+    text: afirmacion,
+    author: { "@id": ID_ORG },
+    inLanguage: organizacion.idioma,
+  };
 }
 
 /** Herramienta interactiva (calculadora, anotador). */

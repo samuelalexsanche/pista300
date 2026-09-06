@@ -4,7 +4,7 @@ import type { Article } from "@/data/types";
 import { categoriaLabel } from "@/data/articles";
 import { formatDate } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { PremiumBadgeLock } from "@/components/premium/premium-gate";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ export function ArticleCard({ a, className, destacado = false }: { a: Article; c
       href={`/aprende/${a.slug}`}
       className={cn("group bg-card hover:border-primary/50 flex flex-col overflow-hidden rounded-xl border transition-colors", className)}
     >
-      <Placeholder src={a.imagen} ratio={destacado ? "21/9" : "16/9"} className="rounded-none border-0 border-b border-dashed" />
+      <Foto src={a.imagen} alt={a.titulo} ratio={destacado ? "21/9" : "16/9"} className="rounded-none" />
       <div className="flex flex-1 flex-col gap-2.5 p-4">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{categoriaLabel[a.categoria]}</Badge>

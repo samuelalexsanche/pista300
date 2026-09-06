@@ -6,12 +6,15 @@ import { articles, articleBySlug, categoriaLabel } from "@/data/articles";
 import { formatDate } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { ArticleCard } from "@/components/content/article-card";
 import { PremiumGate, PremiumBadgeLock } from "@/components/premium/premium-gate";
 import { JsonLd } from "@/components/seo/json-ld";
 import { metadatos } from "@/lib/seo";
 import { grafo, articleSchema, breadcrumbSchema } from "@/lib/schema";
+import { AnswerBlock } from "@/components/content/answer-block";
+import { SourcesList } from "@/components/content/sources-list";
+import { AuthorBio } from "@/components/content/author-bio";
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -110,7 +113,13 @@ export default async function ArticuloPage({ params }: { params: Promise<{ slug:
           </span>
         </div>
 
-        <Placeholder src={a.imagen} ratio="21/9" className="mt-8" />
+        {a.respuestaCorta && (
+          <AnswerBlock className="mt-8" pregunta="La respuesta corta">
+            {a.respuestaCorta}
+          </AnswerBlock>
+        )}
+
+        <Foto src={a.imagen} alt={a.titulo} ratio="21/9" className="mt-8" prioridad sizes="(max-width: 768px) 100vw, 768px" />
 
         <div className="mt-8">
           <Cuerpo bloques={intro} />
@@ -140,6 +149,10 @@ export default async function ArticuloPage({ params }: { params: Promise<{ slug:
             </Badge>
           ))}
         </div>
+
+        {a.fuentes && <SourcesList fuentes={a.fuentes} />}
+
+        <AuthorBio nombre={a.autor} />
       </article>
 
       {relacionados.length > 0 && (

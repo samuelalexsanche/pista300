@@ -6,7 +6,7 @@ import { techniques, techniqueBySlug } from "@/data/techniques";
 import { PageHeader } from "@/components/marketing/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { PremiumGate, PremiumBadgeLock } from "@/components/premium/premium-gate";
 import { JsonLd } from "@/components/seo/json-ld";
 import { metadatos } from "@/lib/seo";
@@ -117,7 +117,7 @@ export default async function TecnicaPage({ params }: { params: Promise<{ slug: 
         </div>
 
         <div className="flex flex-col gap-6">
-          <Placeholder src={t.imagen} ratio="4/3" etiqueta="Secuencia del movimiento" />
+          <Foto src={t.imagen} alt={`Secuencia del movimiento: ${t.nombre}`} ratio="4/3" />
           <Card className="border-warning/40 bg-warning/5">
             <CardContent className="flex gap-3 p-5">
               <AlertTriangle className="text-warning mt-0.5 size-4 shrink-0" />

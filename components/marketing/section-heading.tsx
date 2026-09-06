@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Fondo } from "@/components/marketing/fondo";
 import { cn } from "@/lib/utils";
 
 export function SectionHeading({
@@ -18,7 +19,7 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
+    <div className={cn("reveal flex flex-wrap items-end justify-between gap-4", className)}>
       <div className="max-w-2xl">
         {etiqueta && <p className="text-primary mb-1.5 font-mono text-xs font-medium tracking-widest uppercase">{etiqueta}</p>}
         <h2 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">{titulo}</h2>
@@ -38,15 +39,19 @@ export function PageHeader({
   titulo,
   descripcion,
   children,
+  fondo = "/img/articulos/leer-la-pista.jpg",
 }: {
   etiqueta?: string;
   titulo: string;
   descripcion?: string;
   children?: React.ReactNode;
+  /** Foto de fondo de la cabecera. `null` la deja plana. */
+  fondo?: string | null;
 }) {
   return (
-    <header className="border-b">
-      <div className="container-page py-10 sm:py-14">
+    <header className="relative isolate overflow-hidden border-b">
+      {fondo && <Fondo src={fondo} prioridad />}
+      <div className="container-page relative py-10 sm:py-14">
         {etiqueta && <p className="text-primary mb-2 font-mono text-xs font-medium tracking-widest uppercase">{etiqueta}</p>}
         <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{titulo}</h1>
         {descripcion && <p className="text-muted-foreground mt-3 max-w-2xl text-base leading-relaxed text-pretty">{descripcion}</p>}

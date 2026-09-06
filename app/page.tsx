@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Stat, StatStrip } from "@/components/marketing/stat";
 import { PinTriangle } from "@/components/marketing/pin-triangle";
+import { Fondo } from "@/components/marketing/fondo";
 import { TournamentCard } from "@/components/community/tournament-card";
 import { ArticleCard } from "@/components/content/article-card";
 import { PlayerCard } from "@/components/community/player-card";
@@ -27,7 +28,8 @@ export default function Home() {
   return (
     <>
       {/* ---------------------------------------------------------------- HERO */}
-      <section className="relative overflow-hidden border-b">
+      <section className="relative isolate overflow-hidden border-b">
+        <Fondo src="/img/torneos/regio-scratch.jpg" prioridad />
         <div className="pin-grid pointer-events-none absolute inset-0 opacity-60" aria-hidden />
         <PinTriangle className="text-primary pointer-events-none absolute -top-16 right-[-8%] hidden w-[420px] opacity-[0.13] lg:block" />
         <div className="container-page relative grid gap-10 py-16 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:py-24">

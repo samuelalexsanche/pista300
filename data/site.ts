@@ -68,6 +68,7 @@ export const nav = [
     items: [
       { titulo: "Artículos", href: "/aprende" },
       { titulo: "Boliche básico", href: "/aprende/boliche-basico" },
+      { titulo: "Preguntas frecuentes", href: "/preguntas" },
       { titulo: "Tips rápidos", href: "/aprende?categoria=tecnica" },
       { titulo: "Tutoriales", href: "/aprende?categoria=entrenamiento" },
     ],
@@ -96,6 +97,7 @@ export const nav = [
       { titulo: "Rankings", href: "/conecta/rankings" },
       { titulo: "Ligas", href: "/conecta/ligas" },
       { titulo: "Boliches", href: "/centros" },
+      { titulo: "Datos de la comunidad", href: "/datos" },
     ],
   },
 ] as const;

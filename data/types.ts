@@ -112,10 +112,30 @@ export type CategoriaArticulo =
   | "entrenamiento"
   | "comunidad";
 
+/** Referencia externa verificable. Lo que convierte una afirmación en un dato. */
+export interface Fuente {
+  titulo: string;
+  organizacion: string;
+  url: string;
+  /** Año de publicación o de última revisión de la fuente. */
+  anio?: number;
+}
+
 export interface Article {
   slug: string;
   titulo: string;
   resumen: string;
+  /**
+   * Respuesta directa a la pregunta que da origen al artículo, en 2–3 frases
+   * que se sostienen solas fuera de contexto.
+   *
+   * Es la unidad que un motor generativo puede levantar tal cual para
+   * responder. La investigación de GEO es consistente en esto: lo que se cita
+   * es la afirmación específica y autocontenida, no el párrafo bien escrito.
+   */
+  respuestaCorta?: string;
+  /** Referencias externas. Se muestran al pie y van al JSON-LD como `citation`. */
+  fuentes?: Fuente[];
   categoria: CategoriaArticulo;
   seccion: "aprende" | "mejora";
   autor: string;

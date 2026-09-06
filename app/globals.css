@@ -55,6 +55,12 @@
   --chart-3: #0f766e;
   --chart-4: #7c3aed;
   --chart-5: #a16207;
+
+  /* Velo sobre las fotos de fondo. Es degradado, no plano: cubre donde va el
+     texto y se abre hacia arriba y a la derecha, que es donde la foto puede
+     verse sin comprometer el contraste. */
+  --fondo-velo: #ffffff;
+  --fondo-opacidad: 0.55;
 }
 
 .dark {
@@ -96,6 +102,10 @@
   --chart-3: #2dd4bf;
   --chart-4: #a78bfa;
   --chart-5: #fbbf24;
+
+  /* En oscuro la foto respira más: el texto claro sobre negro tolera más luz. */
+  --fondo-velo: #0b0e12;
+  --fondo-opacidad: 0.75;
 }
 
 @theme inline {
@@ -189,6 +199,43 @@
   @keyframes rise {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: none; }
+  }
+
+  /* ---------------------------------------------------------------------
+     Movimiento ligado al scroll.
+
+     Se hace con animaciones de scroll de CSS (`animation-timeline`), no con
+     JavaScript: no hay listener de scroll, no hay trabajo en el hilo
+     principal y el navegador puede correrlo en el compositor. En un sitio
+     cuyo objetivo es posicionar, un parallax hecho con JS que dispara en
+     cada scroll es una forma segura de arruinar el INP.
+
+     Donde el navegador no lo soporta, el contenido simplemente se ve fijo y
+     completo. Nunca queda invisible: no se anima la opacidad desde cero sin
+     un estado final garantizado.
+     --------------------------------------------------------------------- */
+
+  /* Entrada de sección: el mismo gesto de .animate-rise, disparado al entrar
+     en pantalla en vez de al cargar. */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+
+    /* Capa de fondo que se desplaza más despacio que la página. El recorrido
+       es corto a propósito: 12% del alto: se siente la profundidad sin que la
+       imagen se despegue de su sección. */
+    .parallax-capa {
+      animation: parallax linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    @keyframes parallax {
+      from { transform: translate3d(0, -6%, 0) scale(1.12); }
+      to { transform: translate3d(0, 6%, 0) scale(1.12); }
+    }
   }
 }
 

@@ -7,7 +7,7 @@ import { players } from "@/data/players";
 import { formatMoney } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Placeholder } from "@/components/marketing/placeholder";
+import { Foto } from "@/components/marketing/foto";
 import { Stat, StatStrip } from "@/components/marketing/stat";
 import { PlayerCard } from "@/components/community/player-card";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -56,7 +56,7 @@ export default async function BolaPage({ params }: { params: Promise<{ slug: str
             <ArrowLeft className="size-4" /> Comparador
           </Link>
           <div className="grid gap-8 lg:grid-cols-[1fr_1.3fr] lg:items-center">
-            <Placeholder src={b.imagen} ratio="1/1" etiqueta={`${b.marca} ${b.modelo}`} />
+            <Foto src={b.imagen} alt={`Bola de boliche ${b.marca} ${b.modelo}`} ratio="1/1" prioridad sizes="(max-width: 1024px) 100vw, 420px" />
             <div>
               <p className="text-muted-foreground text-sm tracking-wide uppercase">{b.marca}</p>
               <h1 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{b.modelo}</h1>

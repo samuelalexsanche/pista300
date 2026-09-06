@@ -265,7 +265,7 @@ console.log(scoreGame(p).total===300, scoreGame(s).total===150, scoreGame(o).tot
 
 | # | Tarea | Por qué |
 |---|---|---|
-| 1 | Generar las 61 imágenes (`docs/IMAGENES.md`) | Es lo que separa el demo de verse terminado |
+| ~~1~~ | ~~Generar las 61 imágenes~~ **HECHO** — 64 generadas con Kie AI, ver sección 12 | — |
 | 2 | Sustituir el `MembershipProvider` por auth real (Supabase Auth o NextAuth) y quitar el `PlanToggle` | El toggle es un control de demo |
 | 3 | Backend: Supabase Postgres con el esquema de `docs/MODELO-DATOS.md` | Los datos mock ya están tipados igual que las tablas propuestas |
 | 4 | Pasarela de pago para la membresía y las inscripciones (Stripe o Mercado Pago) | Hoy la inscripción y el cambio de plan son simulados |
@@ -374,3 +374,84 @@ robots.txt y todo el JSON-LD.
    verificable es el factor que Google sí premia; specs plausibles pero no verificadas
    juegan en contra.
 5. **Analítica** (roadmap 9) para medir si el paywall está en el lugar correcto.
+
+---
+
+## 12. Autoridad (GEO de contenido) e imágenes
+
+La sección 11 cubre la fontanería. Esto es lo otro: lo que hace que un modelo
+considere al sitio digno de cita.
+
+### En qué se basa
+
+La investigación de GEO (Aggarwal et al., KDD 2024, ~10,000 consultas) midió nueve
+intervenciones de contenido. Tres destacaron: **añadir estadísticas (~41%), citar fuentes
+(~30-40%) y añadir citas atribuidas (~22%)** sobre la métrica de visibilidad. El matiz
+importante, que casi todo el mundo se salta: **el efecto viene del dato, no del formato**.
+Una cita decorativa sin cifra dentro no gana nada. Lo que se levanta para responder es la
+afirmación específica, verificable y autocontenida.
+
+La otra mitad es E-E-A-T. En los motores generativos funciona como filtro de entrada, no
+como bonificación: una fuente sin autor identificable, sin método declarado y sin política
+de correcciones compite en desventaja aunque escriba mejor.
+
+### Qué se construyó
+
+| Pieza | Dónde | Por qué |
+|---|---|---|
+| **Autores con credencial calculada** | `data/authors.ts`, `components/content/author-bio.tsx` | Los 8 firmantes son jugadores de la comunidad: su credencial es su promedio verificable, no una biografía. Se calcula del perfil, no se escribe |
+| **Respuesta corta** | `components/content/answer-block.tsx`, `data/article-extras.ts` | Cada artículo abre con la respuesta directa en 2-3 frases que se sostienen fuera de contexto. Va también al `abstract` del JSON-LD |
+| **Fuentes citadas** | `components/content/sources-list.tsx` | Referencias reales a USBC, IBF y Kegel, al pie y en `citation` del schema |
+| **Informe de datos propios** | `/datos`, `lib/estadisticas.ts` | La jugada de autoridad más fuerte: ser la fuente del dato, no repetirlo. Estadística agregada de la comunidad con `Dataset` schema, licencia CC BY 4.0 y permiso explícito de cita |
+| **Centro de preguntas** | `/preguntas`, `data/faq.ts` | 15 respuestas autocontenidas a las búsquedas reales, todas visibles (sin acordeón) y marcadas con `FAQPage` |
+| **Transparencia editorial** | `/acerca` | Quién escribe, con qué credencial, de dónde salen las cifras, política de correcciones y declaración de no tener contenido pagado |
+
+### La limitación que hay que conocer
+
+La investigación es consistente en algo incómodo: **el contenido de terceros se cita
+alrededor de 3 veces más que el sitio propio**, y ~91% de las respuestas generativas citan
+fuentes externas antes que la web de la marca. Todo lo anterior es condición necesaria
+pero no suficiente.
+
+Lo que mueve la aguja de verdad es que **otros citen a Pista300**. Por eso `/datos` está
+construido como está: cifras que nadie más publica, con licencia abierta, formato de cita
+listo y contacto para prensa. Esa página es la que puede ganar enlaces de medios
+deportivos; el resto del sitio la sostiene.
+
+### Imágenes
+
+Las 64 imágenes se generaron con Kie AI (`google/nano-banana`) y viven en `public/img/`.
+
+```bash
+KIE_API_KEY=... node scripts/generar-imagenes.mjs   # reanudable: salta las que ya existen
+bash scripts/comprimir-imagenes.sh                  # OBLIGATORIO después de generar
+```
+
+- `scripts/imagenes.manifest.mjs` es el catálogo ruta → prompt. Editable sin tocar el script.
+- **La compresión no es opcional.** Kie devuelve JPEG de ~1.3 MB; sesenta y cuatro son
+  ~75 MB que en export estático se sirven tal cual. El script los deja en **6.2 MB
+  totales (93% menos)**, ~97 KB por imagen.
+- Cinco prompts fueron rechazados por el filtro de Google por describir personas (edad,
+  manos, figuras). Se reencuadraron sobre el objeto o la silueta. Si añades imágenes con
+  personas, cuenta con esto.
+- `<Placeholder>` sigue existiendo para huecos futuros; las fotos van por
+  `components/marketing/foto.tsx`, que fuerza `width`/`height` y `alt` en español.
+
+### Movimiento y profundidad
+
+- Fondos con parallax en el hero y en el encabezado de las 27 rutas
+  (`components/marketing/fondo.tsx`), bajo velo degradado con tokens `--fondo-velo` y
+  `--fondo-opacidad` definidos en `:root` y `.dark`.
+- Entrada al hacer scroll en los encabezados de sección (`.reveal`).
+- **Todo con animaciones de scroll de CSS (`animation-timeline`), sin JavaScript.** No hay
+  listener de scroll, no hay trabajo en el hilo principal y corre en el compositor. Un
+  parallax con JS que dispara en cada scroll arruina el INP, que es métrica de ranking:
+  habría costado justo lo que la sección 11 acaba de ganar.
+- Donde el navegador no lo soporta, el contenido se ve fijo y completo. Verificado:
+  ningún elemento queda en opacidad 0.
+
+**Nota de dirección de arte:** la sección 2 define el movimiento como «sobrio a propósito».
+El parallax se añadió por petición explícita y se calibró para no romper eso: recorrido
+corto, una sola gestualidad repetida, y la foto siempre por debajo de la retícula de pines
+y del triángulo, que siguen siendo la marca. Si en algún momento se siente decorativo en
+lugar de estructural, lo correcto es bajarlo, no subirlo.

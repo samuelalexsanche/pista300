@@ -29,8 +29,16 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="container-page flex flex-col gap-2 border-t py-5 text-xs sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-muted-foreground">
-          © {new Date().getFullYear()} {site.nombre}. Sitio de demostración construido por Mattera Systems.
+        <p className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>© {new Date().getFullYear()} {site.nombre}. Sitio de demostración construido por Mattera Systems.</span>
+          {/* Enlaces de confianza: quién escribe y de dónde salen los datos.
+              Que estén en el pie de todas las páginas es parte de la señal. */}
+          <Link href="/acerca" className="hover:text-foreground underline underline-offset-2">
+            Quiénes somos
+          </Link>
+          <Link href="/datos" className="hover:text-foreground underline underline-offset-2">
+            Datos abiertos
+          </Link>
         </p>
         <p className="text-muted-foreground">
           Datos, nombres y resultados son ficticios y sirven únicamente para mostrar el funcionamiento del sitio.
