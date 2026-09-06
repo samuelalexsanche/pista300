@@ -250,17 +250,14 @@ console.log(scoreGame(p).total===300, scoreGame(s).total===150, scoreGame(o).tot
 - ✅ Toggle Free ⇄ Premium bloquea y desbloquea sin recargar
 - ✅ Paridad de tokens claro/oscuro verificada: todos los tokens de `:root` existen en
   `.dark` (salvo `--radius`, que es común a ambos)
-- ⚠️ **No se pudieron tomar capturas de pantalla**: el entorno de construcción no pudo
-  descargar un navegador headless. La verificación visual (claro/oscuro y responsive a
-  375 / 768 / 1440) queda pendiente de hacer en tu máquina con `npm run dev`
-- ⚠️ `npm run build` **no se pudo ejecutar en el entorno de construcción** porque la
-  carpeta estaba montada sin permiso de borrado y Next necesita limpiar `.next`.
-  **Córrelo en tu máquina; debería pasar limpio** (los tipos ya están validados).
+- ✅ Verificación visual hecha: home, rankings, torneo, perfil de jugador, biblioteca y
+  las herramientas con paywall, en claro y oscuro a 375 / 768 / 1440. Sin errores de
+  consola. Falta pasar el resto de las rutas una por una
+- ✅ `npm run build` pasa limpio: 134 páginas prerenderizadas, cero rutas dinámicas.
 - ⚠️ En el entorno de construcción, `fonts.googleapis.com` estaba bloqueado, así que
   `next/font` usó las pilas de respaldo. En tu máquina descargará Geist normalmente.
   Los `fallback` explícitos ya están puestos en `app/layout.tsx` por si acaso.
-- ℹ️ Quedó una carpeta `.next/` con artefactos parciales que no se pudieron borrar desde
-  el entorno remoto. **Bórrala tú** (`rm -rf .next`) antes del primer build.
+- ✅ La carpeta `.next/` con artefactos parciales ya se borró.
 
 ---
 
@@ -274,7 +271,7 @@ console.log(scoreGame(p).total===300, scoreGame(s).total===150, scoreGame(o).tot
 | 4 | Pasarela de pago para la membresía y las inscripciones (Stripe o Mercado Pago) | Hoy la inscripción y el cambio de plan son simulados |
 | 5 | Panel de administración para publicar artículos y torneos | Hoy se editan archivos `.ts` |
 | 6 | Guardar series desde el anotador en la cuenta del usuario | Es el gancho real de la membresía: el historial |
-| 7 | SEO: `sitemap.ts`, `robots.ts`, `opengraph-image`, JSON-LD de `SportsEvent` para torneos | Los torneos son contenido muy buscado |
+| ~~7~~ | ~~SEO~~ **HECHO** — ver sección 11 | — |
 | 8 | Datos reales de bolas y patrones | Ver advertencias de la sección 6 |
 | 9 | Analítica (Plausible o GA4) y medición del embudo free → premium | Sin esto no se sabe si el paywall está en el lugar correcto |
 
@@ -292,3 +289,88 @@ console.log(scoreGame(p).total===300, scoreGame(s).total===150, scoreGame(o).tot
   `players.ts` regenera 18 series coherentes automáticamente.
 - **Cero colores literales en los componentes.** Todo pasa por tokens; por eso el modo
   oscuro funciona sin tocar un solo componente.
+
+---
+
+## 11. SEO y GEO
+
+**En vivo:** https://samuelalexsanche.github.io/pista300/
+Se publica solo, con GitHub Actions, en cada push a `main` (`.github/workflows/deploy.yml`).
+
+### El criterio
+
+Google publicó en mayo de 2026 su guía de optimización para IA generativa, y ahí desmiente
+casi todo lo que se vende como "GEO": **`llms.txt` no lo usa, no hace falta partir el
+contenido en trozos, no hay que escribir distinto para la IA, y los datos estructurados no
+son obligatorios** para AI Overviews ni AI Mode. Las funciones de IA corren sobre el
+ranking normal de Search. Es decir: **el SEO técnico bien hecho ES el GEO.**
+
+Por eso aquí no hay trucos. Hay fundamentos completos y un `robots.txt` que sí deja pasar
+a los agentes — que es la parte que de verdad se rompe seguido.
+
+### Qué quedó implementado
+
+| Pieza | Archivo | Nota |
+|---|---|---|
+| Base de metadatos | `app/layout.tsx` | `metadataBase`, plantilla de título, `max-image-preview:large` y `max-snippet:-1`, que es lo que permite que el sitio se cite completo en respuestas de IA |
+| Helper de metadatos | `lib/seo.ts` | Todas las rutas construyen su canonical, OG y Twitter desde aquí. No se pueden desincronizar |
+| Constructores de JSON-LD | `lib/schema.ts` | Un `@graph` conectado por `@id` |
+| Sitemap | `app/sitemap.ts` | Con `lastModified` real y prioridad según tipo de contenido |
+| robots.txt | `app/robots.ts` | Permite explícitamente los buscadores con IA y los crawlers de entrenamiento |
+| Imágenes sociales | `lib/og.tsx` + 3 rutas `opengraph-image` | 33 imágenes generadas en build. **No son binarios versionados** |
+
+### El schema por ruta
+
+`SportsOrganization` + `WebSite` con `SearchAction` en el layout; y luego `SportsEvent`
+en torneos, `Person` + `ProfilePage` en jugadores, `SportsTeam` en equipos, `BowlingAlley`
+en cada boliche, `Product` en bolas, `Article` en la biblioteca, `HowTo` en técnicas y en
+boliche básico, `FAQPage` donde hay preguntas visibles, `ItemList` en los listados y
+`BreadcrumbList` en todo lo anidado.
+
+**Lo que a propósito NO se marcó:**
+- `aggregateRating` en las bolas. La calificación es editorial, no viene de reseñas de
+  usuarios. Marcarla sería una acción manual de Google esperando a pasar.
+- `Product`/`Offer` en los planes de membresía. Los precios son una propuesta, no una
+  decisión del cliente (sección 6).
+- `HowTo` en técnicas premium. Declarar como disponibles unos pasos que el visitante no
+  puede leer es exactamente lo que el marcado de paywall existe para evitar.
+
+### El paywall y el SEO
+
+Este era el riesgo real del proyecto. `<PremiumGate>` renderiza el contenido en el DOM
+siempre — difuminado para quien no paga. Eso significa que **el crawler ve el artículo
+completo**, y sin declararlo eso se parece mucho a *cloaking*.
+
+La solución es la que Google documenta para contenido de suscripción: el `Article` lleva
+`isAccessibleForFree: false` y un `hasPart` que apunta al selector `.contenido-premium`,
+clase que `<PremiumGate>` pone en sus dos estados. Así el contenido se indexa completo,
+de forma declarada y legítima.
+
+**Si alguna vez se mueve el paywall a renderizado condicional real** (que es lo correcto
+cuando exista backend), hay que revisar esto: el contenido dejaría de estar en el HTML y
+el `hasPart` sobraría.
+
+### Mover el sitio a su dominio
+
+Dos variables y nada más:
+
+```
+NEXT_PUBLIC_SITE_URL=https://pista300.mx
+NEXT_PUBLIC_BASE_PATH=            # vacío
+```
+
+Están en `.github/workflows/deploy.yml`. De ahí salen el canonical, el sitemap, el
+robots.txt y todo el JSON-LD.
+
+### Lo que falta y no depende de código
+
+1. **Verificar el dominio en Google Search Console** y mandar el sitemap. Sin esto no hay
+   forma de medir nada, ni el informe de rendimiento en IA generativa.
+2. **Google Business Profile** de cada boliche del directorio, si el cliente los opera.
+   Es lo que Google recomienda explícitamente para visibilidad local.
+3. **Las 61 imágenes** (sección 7). Google pide media de calidad para AI, y hoy cada hueco
+   es un `<Placeholder />`.
+4. **Datos reales** de bolas y patrones (sección 6). Contenido de primera mano y
+   verificable es el factor que Google sí premia; specs plausibles pero no verificadas
+   juegan en contra.
+5. **Analítica** (roadmap 9) para medir si el paywall está en el lugar correcto.
