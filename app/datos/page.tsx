@@ -66,9 +66,9 @@ export default function DatosPage() {
       <div className="container-page py-10">
         <StatStrip>
           <Stat valor={resumen.promedioComunidad} etiqueta="Promedio general" detalle="de toda la comunidad" tono="primary" />
-          <Stat valor={resumen.juegos.toLocaleString("es-MX")} etiqueta="Juegos medidos" detalle={`${resumen.series} series`} />
+          <Stat valor={resumen.juegos} etiqueta="Juegos medidos" detalle={`${resumen.series} series`} />
           <Stat valor={resumen.jugadores} etiqueta="Jugadores" detalle={`en ${resumen.boliches} boliches`} />
-          <Stat valor={`${resumen.juegosSobre200}%`} etiqueta="Juegos de 200+" detalle="del total registrado" />
+          <Stat valor={`${Math.round(resumen.juegosSobre200)}%`} etiqueta="Juegos de 200+" detalle="del total registrado" />
         </StatStrip>
 
         <p className="text-muted-foreground mt-6 text-sm leading-relaxed">

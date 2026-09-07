@@ -30,8 +30,10 @@ export function SiteHeader() {
       <div className="container-page flex h-14 items-center gap-3">
         <Logo />
 
-        {/* Navegación de los tres hubs del diagrama: Aprende / Mejora / Conecta */}
-        <nav className="hidden md:flex" onMouseLeave={() => setHub(null)}>
+        {/* Navegación de los tres hubs del diagrama: Aprende / Mejora / Conecta.
+            Desde lg: por debajo no cabe junto al bloque derecho y se usa el
+            desplegable, que lleva los mismos enlaces. */}
+        <nav className="hidden lg:flex" onMouseLeave={() => setHub(null)}>
           <ul className="flex items-center">
             {nav.map((seccion) => {
               const activo = pathname.startsWith(seccion.href);
@@ -101,7 +103,7 @@ export function SiteHeader() {
 
           <Sheet open={abierto} onOpenChange={setAbierto}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Abrir menú">
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Abrir menú">
                 <Menu />
               </Button>
             </SheetTrigger>

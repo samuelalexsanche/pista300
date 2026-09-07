@@ -33,7 +33,7 @@ export default function Home() {
         <div className="pin-grid pointer-events-none absolute inset-0 opacity-60" aria-hidden />
         <PinTriangle className="text-primary pointer-events-none absolute -top-16 right-[-8%] hidden w-[420px] opacity-[0.13] lg:block" />
         <div className="container-page relative grid gap-10 py-16 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:py-24">
-          <div className="animate-rise">
+          <div className="animate-rise min-w-0">
             <Badge variant="outline" className="mb-5 gap-1.5 bg-background">
               <span className="bg-primary size-1.5 rounded-full" /> Comunidad abierta · {site.ciudad}
             </Badge>
@@ -64,7 +64,10 @@ export default function Home() {
             </StatStrip>
           </div>
 
-          <div className="bg-card animate-rise rounded-2xl border p-5 shadow-sm">
+          {/* min-w-0: la hoja de anotación mide 672px de contenido mínimo. Sin
+              esto, en móvil estira la única columna del grid a ese ancho y
+              arrastra también al titular de la izquierda. */}
+          <div className="bg-card animate-rise min-w-0 rounded-2xl border p-5 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium">Serie de la semana</p>
@@ -132,7 +135,7 @@ export default function Home() {
 
       {/* --------------------------------------------------- RANKING + LECTURA */}
       <section className="container-page grid gap-12 py-16 lg:grid-cols-[1fr_1.3fr]">
-        <div>
+        <div className="min-w-0">
           <SectionHeading etiqueta="Rankings" titulo="Top de la comunidad" href="/conecta/rankings" hrefLabel="Ranking completo" />
           <div className="mt-6 flex flex-col gap-2">
             {top.map((r) => (
@@ -140,7 +143,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div>
+        <div className="min-w-0">
           <SectionHeading etiqueta="Aprende y mejora" titulo="Lo último publicado" href="/aprende" hrefLabel="Ver todo" />
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {recientes.map((a) => (

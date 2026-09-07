@@ -172,6 +172,20 @@
   table th {
     font-variant-numeric: tabular-nums;
   }
+  /* Los hijos de un grid traen min-width:auto, así que no encogen por debajo
+     del ancho mínimo de su contenido. Basta una tabla, la hoja de anotación o
+     una tarjeta densa para que estiren su columna y empujen la página entera:
+     aparece scroll horizontal en móvil y el bloque ni siquiera activa su
+     propio overflow. Es el fallo responsive más común de este layout y se
+     repetía en media docena de páginas.
+
+     Se limita a grid (no a flex, donde encoger sí cambia el reparto de
+     espacio) y va en :where() para no sumar especificidad: cualquier
+     min-w-* explícito en una clase sigue ganando. */
+  :where(.grid) > * {
+    min-width: 0;
+  }
+
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;

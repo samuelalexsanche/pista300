@@ -62,9 +62,11 @@ export function Scoresheet() {
   const pctRepuestos = repuestosPosibles ? Math.round((resultado.spares / repuestosPosibles) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card>
-        <CardContent className="p-5">
+    // min-w-0: deja que la hoja de anotación active su propio scroll
+    // horizontal en vez de empujar la página entera en móvil.
+    <div className="flex min-w-0 flex-col gap-6">
+      <Card className="min-w-0">
+        <CardContent className="min-w-0 p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               {terminado ? (
@@ -76,7 +78,7 @@ export function Scoresheet() {
               )}
               {resultado.total === 300 && <Badge>¡Juego perfecto!</Badge>}
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="ghost" size="sm" onClick={ejemplo}>
                 <Wand2 /> Cargar ejemplo
               </Button>

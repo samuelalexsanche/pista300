@@ -129,7 +129,8 @@ export default async function JugadorPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <div className="container-page grid gap-8 py-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
-        <div className="flex flex-col gap-8">
+        {/* min-w-0: deja que la gráfica y las tablas encojan en móvil. */}
+        <div className="flex min-w-0 flex-col gap-8">
           <Card>
             <CardHeader>
               <CardTitle>Tendencia de la temporada</CardTitle>

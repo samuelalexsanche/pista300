@@ -16,10 +16,15 @@ export function SiteFooter() {
         {nav.map((seccion) => (
           <div key={seccion.slug}>
             <p className="mb-3 text-sm font-semibold">{seccion.titulo}</p>
-            <ul className="flex flex-col gap-2">
+            {/* Los enlaces son de bloque con alto mínimo: como texto en línea
+                medían 18px y quedaban por debajo del área táctil usable. */}
+            <ul className="flex flex-col">
               {seccion.items.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+                  <Link
+                    href={item.href}
+                    className="text-muted-foreground hover:text-foreground flex min-h-9 items-center text-sm transition-colors sm:min-h-0 sm:py-1"
+                  >
                     {item.titulo}
                   </Link>
                 </li>

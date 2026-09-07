@@ -63,7 +63,12 @@ export function RankingTable({ filas, ciudades }: { filas: RankingRow[]; ciudade
       <button
         type="button"
         onClick={() => ordenar(c)}
-        className={cn("inline-flex items-center gap-1 uppercase transition-colors hover:text-foreground", campo === c && "text-foreground")}
+        className={cn(
+          // -my-2 py-2: agranda el área táctil a 32px sin alterar el alto de
+          // la fila. Un encabezado ordenable de 16px no se puede tocar.
+          "-my-2 inline-flex min-h-8 items-center gap-1 py-2 uppercase transition-colors hover:text-foreground",
+          campo === c && "text-foreground"
+        )}
         aria-label={`Ordenar por ${String(children)}`}
       >
         {children}

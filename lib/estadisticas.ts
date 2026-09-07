@@ -124,7 +124,7 @@ export const hallazgos = [
   },
   {
     titulo: "Cuántos juegos pasan de 200",
-    dato: `${resumen.juegosSobre200}%`,
+    dato: `${Math.round(resumen.juegosSobre200)}%`,
     afirmacion: `Solo el ${resumen.juegosSobre200}% de los juegos registrados en la comunidad Pista300 llega o supera los 200 puntos. Uno de cada cinco jugadores nunca lo ha hecho.`,
   },
   {

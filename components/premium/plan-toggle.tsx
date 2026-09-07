@@ -13,7 +13,9 @@ export function PlanToggle({ className }: { className?: string }) {
 
   return (
     <div className={cn("inline-flex items-center gap-2", className)}>
-      <span className="text-muted-foreground hidden text-[11px] font-medium tracking-wide uppercase lg:inline">Demo</span>
+      {/* Desde xl: en lg el encabezado ya va justo y esta etiqueta es lo
+          menos importante que hay en él. */}
+      <span className="text-muted-foreground hidden text-[11px] font-medium tracking-wide uppercase xl:inline">Demo</span>
       <div className="bg-surface flex items-center rounded-full p-0.5" role="group" aria-label="Cambiar plan de demostración">
         <button
           type="button"

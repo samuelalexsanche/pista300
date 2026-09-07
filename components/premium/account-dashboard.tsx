@@ -93,7 +93,9 @@ export function AccountDashboard() {
         )}
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-start">
-          <div className="flex flex-col gap-6">
+          {/* min-w-0: sin esto la hoja de anotación no deja encoger la columna
+              y desborda la página en móvil. */}
+          <div className="flex min-w-0 flex-col gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Tu último juego</CardTitle>

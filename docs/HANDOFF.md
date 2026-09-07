@@ -455,3 +455,69 @@ El parallax se añadió por petición explícita y se calibró para no romper es
 corto, una sola gestualidad repetida, y la foto siempre por debajo de la retícula de pines
 y del triángulo, que siguen siendo la marca. Si en algún momento se siente decorativo en
 lugar de estructural, lo correcto es bajarlo, no subirlo.
+
+---
+
+## 13. Responsive
+
+Verificado sin desbordamiento horizontal en las 30 rutas a **320, 375, 768, 1024,
+1280 y 1440 px**, en claro y oscuro.
+
+### El fallo que había y por qué
+
+Los hijos de un grid traen `min-width: auto`: no encogen por debajo del ancho mínimo
+de su contenido. La hoja de anotación mide 672 px de contenido mínimo, así que
+estiraba su columna a ese ancho y empujaba la página entera — y su propio
+`overflow-x-auto` nunca llegaba a activarse. En el hero arrastraba también al
+titular de al lado, porque en móvil ambos comparten la única columna.
+
+Afectaba a `/`, `/conecta`, `/cuenta`, `/herramientas/anotador`, el perfil de
+jugador, la ficha de torneo y la ficha de bola.
+
+**La solución está en `app/globals.css`:**
+
+```css
+:where(.grid) > * { min-width: 0; }
+```
+
+Se limita a grid (no a flex, donde encoger sí cambia el reparto de espacio) y va en
+`:where()` para no sumar especificidad: cualquier `min-w-*` explícito sigue ganando.
+Además quedan `min-w-0` explícitos en los puntos concretos, como documentación en el
+lugar donde importa.
+
+### Otros arreglos
+
+| Qué | Dónde | Por qué |
+|---|---|---|
+| Menú de escritorio desde `lg` en vez de `md` | `site-header.tsx` | A 768 px el encabezado pedía 834: logo 100 + menú 361 + bloque derecho 341 + padding. El desplegable ahora cubre hasta `lg`, así que en tablet no queda nada inalcanzable |
+| Etiqueta «Demo» desde `xl` | `plan-toggle.tsx` | Sobraban 24 px justo en 1024, donde aparecen a la vez el menú y el botón Premium. Es el píxel menos importante del encabezado |
+| Botones de ordenar con área táctil de 32 px | `ranking-table.tsx` | Medían 16 px de alto. Se agrandan con `-my-2 py-2`, sin alterar el alto de la fila |
+| Enlaces del pie con alto mínimo de 36 px en móvil | `site-footer.tsx` | Como texto en línea medían 18 px |
+| Botones del anotador con `flex-wrap` | `scoresheet.tsx` | Tres botones no caben en una fila de 375 px |
+| Cifras de cabecera sin separador de millares | `/datos` | En Geist Mono todos los glifos ocupan una celda, así que la coma y el punto se leen como espacios: «1 , 296», «30 . 6%». En el texto en prosa sí se conservan |
+
+### Cómo comprobarlo cuando cambies algo
+
+Pega esto en la consola del navegador con el sitio abierto. Mide el ancho real y
+descarta lo que ya vive dentro de un contenedor con scroll propio:
+
+```js
+const sweep = async (rutas, ancho) => {
+  const f = document.createElement("iframe");
+  f.style.cssText = `position:fixed;left:-9999px;width:${ancho}px;height:900px;border:0`;
+  document.body.appendChild(f);
+  const malas = [];
+  for (const r of rutas) {
+    await new Promise((ok) => { f.onload = ok; f.src = r; });
+    await new Promise((ok) => setTimeout(ok, 300));
+    const d = f.contentDocument;
+    const x = d.documentElement.scrollWidth - d.documentElement.clientWidth;
+    if (x > 1) malas.push(`${r}: +${x}px`);
+  }
+  f.remove();
+  return malas;
+};
+await sweep(["/", "/conecta/rankings", "/cuenta", "/datos"], 375);
+```
+
+Hazlo en tandas de 10–15 rutas: más de eso agota el tiempo de la consola.

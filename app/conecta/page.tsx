@@ -62,7 +62,7 @@ export default function ConectaPage() {
         </div>
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_1fr]">
-          <div>
+          <div className="min-w-0">
             <SectionHeading etiqueta="Rankings" titulo="Top 8" href="/conecta/rankings" hrefLabel="Ranking completo" />
             <div className="mt-6 flex flex-col gap-2">
               {ranking.slice(0, 8).map((r) => (
@@ -70,7 +70,7 @@ export default function ConectaPage() {
               ))}
             </div>
           </div>
-          <div>
+          <div className="min-w-0">
             <SectionHeading etiqueta="En números" titulo="La comunidad hoy" />
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {[

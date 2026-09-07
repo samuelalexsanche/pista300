@@ -138,7 +138,8 @@ export default async function TorneoPage({ params }: { params: Promise<{ slug: s
       </div>
 
       <div className="container-page grid gap-10 py-12 lg:grid-cols-[1.4fr_1fr]">
-        <div className="flex flex-col gap-8">
+        {/* min-w-0: deja encoger la columna en pantallas de 320px. */}
+        <div className="flex min-w-0 flex-col gap-8">
           <Card>
             <CardHeader>
               <CardTitle>Reglas y formato</CardTitle>
